@@ -1,0 +1,42 @@
+# Python virtual environments
+venv/
+*/venv/
+.env
+
+# Python cache and artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+
+# Django static and media (built outputs)
+staticfiles/
+media/
+
+# Node/JS cache (if any)
+node_modules/
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Build/Dist folders
+.dist/
+dist/
+build/
+
+# Coverage/Testing
+.coverage
+htmlcov/
+
+# Environment files
+*.env
+.env.local
+.env.production
