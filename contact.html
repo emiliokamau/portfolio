@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact | The Cloud Lab</title>
+  <link rel="stylesheet" href="styles/global.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700&family=Quicksand:wght@700&family=Inter:wght@400;500&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="sidebar" class="sidebar">
+    <button id="sidebar-toggle" aria-label="Toggle navigation">☰</button>
+    <button id="darkmode-toggle" aria-label="Toggle dark mode" class="dark-toggle-btn">🌙</button>
+    <nav class="sidebar-nav">
+      <a href="landing.html">Home</a>
+      <a href="skills.html">Skills</a>
+      <a href="projects.html">Projects</a>
+      <a href="experiments.html">Experiments</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+  <main class="main-content">
+    <h2 class="section-title" tabindex="0">Contact Me</h2>
+    <form class="contact-form" id="contact-form" aria-label="Contact Form">
+      <input type="text" name="name" placeholder="Your Name" required aria-label="Your Name" />
+      <input type="email" name="email" placeholder="Your Email" required aria-label="Your Email" />
+      <textarea name="message" placeholder="Your Message" required aria-label="Your Message"></textarea>
+      <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY" aria-label="reCAPTCHA"></div>
+      <button type="submit" class="btn btn-primary" aria-label="Send Message">Send Message</button>
+    </form>
+    <div id="form-msg" aria-live="polite"></div>
+    <div class="contact-details">
+      <p>Email: <a href="mailto:emiliokamau35@gmail.com" aria-label="Email emiliokamau35@gmail.com">emiliokamau35@gmail.com</a></p>
+      <p>Phone: <a href="tel:+254796526647" aria-label="Call +254796526647">+254796526647</a></p>
+      <p>WhatsApp: <a href="https://wa.me/254796526647" target="_blank" aria-label="Chat on WhatsApp" rel="noopener">Chat on WhatsApp</a></p>
+    </div>
+    <div class="contact-links">
+      <a href="https://www.linkedin.com/in/emilio-kamau" target="_blank" class="contact-icon" aria-label="LinkedIn Profile" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/emiliokamau" target="_blank" class="contact-icon" aria-label="GitHub Profile" rel="noopener">GitHub</a>
+    </div>
+    <div style="margin-top:2rem;">
+      <div class="typewriter" id="typewriter" aria-label="Profile Description"></div>
+    </div>
+  </section>
+  <footer class="main-footer">
+    <div class="footer-content">
+      <p class="footer-text">&copy; 2025 The Cloud Lab. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="mailto:emiliokamau35@gmail.com" aria-label="Email">Email</a>
+        <a href="https://github.com/emiliokamau" target="_blank" aria-label="GitHub" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/emilio-kamau" target="_blank" aria-label="LinkedIn" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+  </footer>
+  <script src="scripts/main.js"></script>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <script>
+    // Sidebar toggle logic
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const mainContent = document.querySelector('.main-content');
+    sidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('collapsed');
+      mainContent.classList.toggle('expanded');
+    });
+    // Dark mode toggle logic
+    const darkToggle = document.getElementById('darkmode-toggle');
+    darkToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      darkToggle.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+    });
+    // Typewriter Effect for Profile Description
+    const typewriterText = "I'm Emilio Kamau, a Full Stack Developer & Data Scientist passionate about building intelligent, beautiful, and user-friendly digital experiences. I love Python, Django, Flask, and AI/ML. I turn data into stories and code into magic!";
+    const typewriterElem = document.getElementById('typewriter');
+    let i = 0;
+    function typeWriter() {
+      if (typewriterElem && i < typewriterText.length) {
+        typewriterElem.textContent += typewriterText.charAt(i);
+        i++;
+        setTimeout(typeWriter, 30);
+      }
+    }
+    typeWriter();
+  </script>
+</body>
+</html>
+  </main>

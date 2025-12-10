@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome | The Cloud Lab</title>
+  <link rel="stylesheet" href="styles/global.css">
+</head>
+<body>
+  <div id="sidebar" class="sidebar">
+    <button id="sidebar-toggle" aria-label="Toggle navigation">☰</button>
+    <button id="darkmode-toggle" aria-label="Toggle dark mode" class="dark-toggle-btn">🌙</button>
+    <nav class="sidebar-nav">
+      <a href="landing.html">Home</a>
+      <a href="skills.html">Skills</a>
+      <a href="projects.html">Projects</a>
+      <a href="experiments.html">Experiments</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+  <main class="main-content">
+    <section class="landing-section glass">
+      <div class="landing-content enlarged-profile">
+        <img src="assets/profile1.jpg" alt="Profile Photo" class="profile-photo large-profile" />
+        <div class="landing-info">
+          <h1 class="landing-title">Hi, I'm EMILIO KAMAU</h1>
+          <p class="landing-desc">I'm a Full Stack Developer & Data Scientist passionate about building intelligent, beautiful, and user-friendly digital experiences. I love Python, Django, Flask, and AI/ML. I turn data into stories and code into magic!</p>
+          <div class="landing-languages">
+            <span class="lang-badge">Python</span>
+            <span class="lang-badge">Django</span>
+            <span class="lang-badge">Flask</span>
+            <span class="lang-badge">JavaScript</span>
+            <span class="lang-badge">HTML</span>
+            <span class="lang-badge">CSS</span>
+            <span class="lang-badge">AI/ML</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="main-footer">
+    <div class="footer-content">
+      <p class="footer-text">&copy; 2025 The Cloud Lab. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="mailto:emiliokamau35@gmail.com" aria-label="Email">Email</a>
+        <a href="https://github.com/emiliokamau" target="_blank" aria-label="GitHub" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/emilio-kamau" target="_blank" aria-label="LinkedIn" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+  </footer>
+  <script src="config/env.js"></script>
+  <script src="scripts/main.js"></script>
+</body>
+<script>
+// Sidebar toggle logic
+const sidebar = document.getElementById('sidebar');
+const sidebarToggle = document.getElementById('sidebar-toggle');
+const mainContent = document.querySelector('.main-content');
+sidebarToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('collapsed');
+  mainContent.classList.toggle('expanded');
+});
+</script>
+</html>
+<script>
+// Dark mode toggle logic
+const darkToggle = document.getElementById('darkmode-toggle');
+darkToggle.addEventListener('click', () => {
+  document.body.classList.toggle('dark');
+  if(document.body.classList.contains('dark')) {
+    darkToggle.textContent = '☀️ Light Mode';
+  } else {
+    darkToggle.textContent = '🌙 Dark Mode';
+  }
+});
+</script>
