@@ -195,7 +195,7 @@ body.dark .sidebar {
   flex-direction: column;
   align-items: flex-start;
   padding: 1rem 0.5rem;
-  transition: width 0.25s ease;
+  transition: width 0.25s ease, transform 0.25s ease;
   z-index: 10;
   position: fixed;
   top: 0;
@@ -374,11 +374,11 @@ a:focus, button:focus, input:focus, textarea:focus {
   justify-content: center;
 }
 .project-card {
-  background: rgba(255,255,255,0.8);
-  border-radius: 20px;
-  box-shadow: 0 4px 16px rgba(79, 140, 255, 0.12);
+  background: rgba(255,255,255,0.6);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(79, 140, 255, 0.12);
   width: 300px;
-  padding: 1.5rem;
+  padding: 1.25rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -488,9 +488,20 @@ a:focus, button:focus, input:focus, textarea:focus {
 }
 
 @media (max-width: 900px) {
+    /* Mobile: sidebar becomes full-screen overlay */
     .sidebar {
-      width: 60px;
-      padding: 0.5rem 0.2rem;
+      width: 100vw;
+      height: 100vh;
+      padding: 1rem;
+      transform: translateX(-100%);
+      z-index: 1000;
+    }
+    .sidebar.collapsed {
+      transform: translateX(0);
+    }
+    /* Ensure menu items are visible in overlay */
+    .sidebar.collapsed .sidebar-nav {
+      display: flex;
     }
     .sidebar-nav a {
       font-size: 1rem;
@@ -498,6 +509,10 @@ a:focus, button:focus, input:focus, textarea:focus {
     }
     .main-content {
       padding: 1rem;
+      margin-left: 0 !important; /* overlay does not push content */
+    }
+    .main-footer {
+      margin-left: 0 !important;
     }
     .enlarged-profile {
       flex-direction: column;
@@ -505,8 +520,8 @@ a:focus, button:focus, input:focus, textarea:focus {
       padding: 1.5rem 0;
     }
     .large-profile {
-      width: 120px;
-      height: 120px;
+      width: 170px;
+      height: 170px;
     }
   .projects-grid, .kanban-board {
     flex-direction: column;
@@ -523,8 +538,8 @@ a:focus, button:focus, input:focus, textarea:focus {
     gap: 1rem;
   }
   .profile-photo {
-    width: 80px;
-    height: 80px;
+    width: 170px;
+    height: 170px;
   }
   .hero-title {
     font-size: 1.3rem;
@@ -533,7 +548,7 @@ a:focus, button:focus, input:focus, textarea:focus {
     font-size: 1.2rem;
   }
   .project-card {
-    width: 90vw;
+    width: 92vw;
     min-width: 220px;
     padding: 1rem;
   }

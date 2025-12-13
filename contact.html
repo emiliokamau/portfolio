@@ -25,7 +25,7 @@
       <input type="text" name="name" placeholder="Your Name" required aria-label="Your Name" />
       <input type="email" name="email" placeholder="Your Email" required aria-label="Your Email" />
       <textarea name="message" placeholder="Your Message" required aria-label="Your Message"></textarea>
-      <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY" aria-label="reCAPTCHA"></div>
+      <div class="g-recaptcha" data-sitekey="" aria-label="reCAPTCHA"></div>
       <button type="submit" class="btn btn-primary" aria-label="Send Message">Send Message</button>
     </form>
     <div id="form-msg" aria-live="polite"></div>
@@ -83,6 +83,15 @@
     typeWriter();
   </script>
   <script src="config/env.js"></script>
+  <script>
+    // Attach site key from env to reCAPTCHA widget
+    document.addEventListener('DOMContentLoaded', () => {
+      const widget = document.querySelector('.g-recaptcha');
+      if (widget && window.RECAPTCHA_SITE_KEY) {
+        widget.setAttribute('data-sitekey', window.RECAPTCHA_SITE_KEY);
+      }
+    });
+  </script>
   <script src="scripts/main.js"></script>
 </body>
 </html>
