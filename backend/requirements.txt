@@ -1,0 +1,9 @@
+Django>=5.0
+djangorestframework
+django-cors-headers
+django-environ
+gunicorn
+requests
+Pillow
+# If using Postgres on Railway, uncomment:
+psycopg2-binary

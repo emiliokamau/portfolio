@@ -1,0 +1,12 @@
+[service]
+root = "backend"
+
+[build]
+commands = [
+  "pip install --upgrade pip",
+  "pip install -r requirements.txt",
+  "bash deploy.sh"
+]
+
+[start]
+command = "gunicorn cloudlab.wsgi --bind 0.0.0.0:$PORT"
