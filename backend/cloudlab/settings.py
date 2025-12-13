@@ -65,7 +65,7 @@ SECRET_KEY = env('SECRET_KEY', default='dev-insecure-change-me-please')
 DEBUG = env.bool('DEBUG', default=True)
 
 # Comma-separated hosts in env, e.g. "127.0.0.1,localhost,.railway.app"
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost'])
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost', '.railway.app'])
 
 
 # Application definition
@@ -100,8 +100,19 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-# CORS settings for local frontend testing
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS settings: allow Vercel frontend and local dev
+CORS_ALLOWED_ORIGINS = [
+    "https://emiliokamau.vercel.app",
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",
+]
+# For testing only, you can use the permissive option below
+# CORS_ALLOW_ALL_ORIGINS = True
+
+# CSRF trusted origins when using cookie-based POSTs from frontend
+CSRF_TRUSTED_ORIGINS = [
+    "https://emiliokamau.vercel.app",
+]
 
 ROOT_URLCONF = 'cloudlab.urls'
 
