@@ -11,7 +11,7 @@ A modern, accessible, multi-page personal portfolio built with plain HTML/CSS/JS
 - API-ready: `config/env.js` sets `window.API_BASE` for backend separation
 
 ## Structure
-- `landing.html`, `skills.html`, `projects.html`, `experiments.html`, `contact.html`
+- `index.html`, `skills.html`, `projects.html`, `experiments.html`, `contact.html`
 - `styles/global.css` — global styles
 - `scripts/main.js` — shared functionality (API calls, persistence)
 - `config/env.js` — frontend API base configuration
@@ -19,7 +19,7 @@ A modern, accessible, multi-page personal portfolio built with plain HTML/CSS/JS
 ## Local Run
 ```powershell
 # From the project root
-python -m http.server 5500; Start-Process "http://localhost:5500/landing.html"
+python -m http.server 5500; Start-Process "http://localhost:5500/index.html"
 ```
 Backend (Django) example:
 ```powershell
