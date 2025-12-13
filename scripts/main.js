@@ -1,4 +1,4 @@
-// --- Multi-language support ---
+
 const translations = {
   en: {
     landingTitle: "Hi, I'm [Your Name]",
@@ -54,7 +54,7 @@ if (skillsDashboard) {
 
 // --- API Base URL ---
 // Prefer a global override if provided by config/env.js
-const API_BASE = (typeof window !== 'undefined' && window.API_BASE) ? window.API_BASE : 'http://127.0.0.1:8000';
+const API_BASE = (typeof window !== 'undefined' && window.API_BASE) ? window.API_BASE : 'https://portfolio-emiliokamau.up.railway.app/';
 
 // --- Fetch and Render Projects ---
 async function loadProjects() {

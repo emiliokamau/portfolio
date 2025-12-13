@@ -1,5 +1,5 @@
 // --- API Base URL ---
-const API_BASE = 'http://127.0.0.1:8000';
+const API_BASE = 'https://portfolio-emiliokamau.up.railway.app/';
 
 // --- Fetch and Render Skills ---
 async function loadSkills() {
