@@ -1,5 +1,6 @@
 
-const translations = {
+// Use var + window cache to avoid redeclaration if script loads twice
+var translations = (typeof window !== 'undefined' && window.translations) ? window.translations : {
   en: {
     landingTitle: "Hi, I'm [Your Name]",
     landingDesc: "I'm a Full Stack Developer & Data Scientist passionate about building intelligent, beautiful, and user-friendly digital experiences. I love Python, Django, Flask, and AI/ML. I turn data into stories and code into magic!",
@@ -19,6 +20,7 @@ const translations = {
     sendMessage: "Enviar mensaje"
   }
 };
+if (typeof window !== 'undefined') { window.translations = translations; }
 
 function setLanguage(lang) {
   document.querySelector('.landing-title').textContent = translations[lang].landingTitle;
@@ -53,8 +55,12 @@ if (skillsDashboard) {
 
 
 // --- API Base URL ---
-// Prefer a global override if provided by config/env.js
-const API_BASE = (typeof window !== 'undefined' && window.API_BASE) ? window.API_BASE : 'https://portfolio-emiliokamau.up.railway.app/';
+// Prefer a global override if provided by config/env.js; strip trailing slashes
+const API_BASE = (
+  (typeof window !== 'undefined' && window.API_BASE)
+    ? window.API_BASE
+    : 'https://portfolio-emiliokamau.up.railway.app'
+).replace(/\/+$/, '');
 
 // --- Fetch and Render Projects ---
 async function loadProjects() {
