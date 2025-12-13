@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700&family=Quicksand:wght@700&family=Inter:wght@400;500&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
+  <button class="sidebar-fab" aria-label="Open menu">☰</button>
   <div id="sidebar" class="sidebar">
     <button id="sidebar-toggle" aria-label="Toggle navigation">☰</button>
     <button id="darkmode-toggle" aria-label="Toggle dark mode" class="dark-toggle-btn">🌙</button>
@@ -19,6 +20,7 @@
       <a href="contact.html">Contact</a>
     </nav>
   </div>
+  <div class="sidebar-backdrop" aria-hidden="true"></div>
   <main class="main-content">
     <h2 class="section-title" tabindex="0">Contact Me</h2>
     <form class="contact-form" id="contact-form" aria-label="Contact Form">
@@ -59,10 +61,18 @@
     const sidebar = document.getElementById('sidebar');
     const sidebarToggle = document.getElementById('sidebar-toggle');
     const mainContent = document.querySelector('.main-content');
+    const sidebarFab = document.querySelector('.sidebar-fab');
     sidebarToggle.addEventListener('click', () => {
       sidebar.classList.toggle('collapsed');
       mainContent.classList.toggle('expanded');
+      document.body.classList.toggle('noscroll', sidebar.classList.contains('collapsed'));
     });
+    if (sidebarFab) {
+      sidebarFab.addEventListener('click', () => {
+        sidebar.classList.add('collapsed');
+        document.body.classList.add('noscroll');
+      });
+    }
     // Dark mode toggle logic
     const darkToggle = document.getElementById('darkmode-toggle');
     darkToggle.addEventListener('click', () => {

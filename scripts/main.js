@@ -184,8 +184,12 @@ if (btnPrimary) {
 document.addEventListener('DOMContentLoaded', () => {
   const body = document.body;
   const sidebar = document.querySelector('.sidebar');
+  const sidebarBackdrop = document.querySelector('.sidebar-backdrop');
+  const sidebarFab = document.querySelector('.sidebar-fab');
   const darkBtn = document.querySelector('.dark-toggle-btn');
   const sidebarToggle = document.getElementById('sidebar-toggle');
+  const firstSidebarLink = document.querySelector('.sidebar-nav a');
+  let lastFocusedBeforeOpen = null;
 
   // Apply saved theme
   const savedTheme = localStorage.getItem('theme');
@@ -214,6 +218,38 @@ document.addEventListener('DOMContentLoaded', () => {
       sidebar.classList.toggle('collapsed');
       const isCollapsed = sidebar.classList.contains('collapsed');
       localStorage.setItem('sidebarCollapsed', isCollapsed ? 'true' : 'false');
+      body.classList.toggle('noscroll', isCollapsed);
+      if (isCollapsed) {
+        lastFocusedBeforeOpen = document.activeElement;
+        if (firstSidebarLink) firstSidebarLink.focus();
+      } else {
+        if (lastFocusedBeforeOpen && lastFocusedBeforeOpen.focus) {
+          lastFocusedBeforeOpen.focus();
+        }
+      }
+    });
+  }
+
+  // Floating button opens sidebar overlay on mobile
+  if (sidebarFab && sidebar) {
+    sidebarFab.addEventListener('click', () => {
+      sidebar.classList.add('collapsed');
+      localStorage.setItem('sidebarCollapsed', 'true');
+      body.classList.add('noscroll');
+      lastFocusedBeforeOpen = document.activeElement;
+      if (firstSidebarLink) firstSidebarLink.focus();
+    });
+  }
+
+  // Backdrop click closes the sidebar overlay
+  if (sidebarBackdrop && sidebar) {
+    sidebarBackdrop.addEventListener('click', () => {
+      sidebar.classList.remove('collapsed');
+      localStorage.setItem('sidebarCollapsed', 'false');
+      body.classList.remove('noscroll');
+      if (lastFocusedBeforeOpen && lastFocusedBeforeOpen.focus) {
+        lastFocusedBeforeOpen.focus();
+      }
     });
   }
 });

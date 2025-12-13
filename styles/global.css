@@ -514,6 +514,46 @@ a:focus, button:focus, input:focus, textarea:focus {
     .main-footer {
       margin-left: 0 !important;
     }
+    /* Backdrop behind the sidebar overlay */
+    .sidebar-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 900;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    body.dark .sidebar-backdrop {
+      background: rgba(0,0,0,0.55);
+    }
+    .sidebar.collapsed + .sidebar-backdrop {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    /* Prevent background scroll when overlay is open */
+    body.noscroll {
+      overflow: hidden;
+      touch-action: none;
+    }
+      /* Floating toggle button visible when sidebar is hidden */
+      .sidebar-fab {
+        position: fixed;
+        top: 0.75rem;
+        left: 0.75rem;
+        z-index: 1100;
+        background: #4f8cff;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        width: 44px;
+        height: 44px;
+        font-size: 1.6rem;
+        line-height: 44px;
+        text-align: center;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+      }
+      body.dark .sidebar-fab { background: #2056b3; }
     .enlarged-profile {
       flex-direction: column;
       gap: 1.5rem;
