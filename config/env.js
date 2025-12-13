@@ -5,4 +5,4 @@
 // - Docker compose:    http://localhost:8000
 // - Cloud dev server:  https://api.example.com
 
-window.API_BASE = 'http://127.0.0.1:8000';
+window.API_BASE = 'https://portfolio-emiliokamau.up.railway.app';
