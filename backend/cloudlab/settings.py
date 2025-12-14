@@ -112,7 +112,15 @@ CORS_ALLOWED_ORIGINS = [
 # CSRF trusted origins when using cookie-based POSTs from frontend
 CSRF_TRUSTED_ORIGINS = [
     "https://emiliokamau.vercel.app",
+    "https://portfolio-emiliokamau.up.railway.app",
 ]
+
+# Ensure Django correctly detects HTTPS behind Railway's proxy
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Secure cookies when served over HTTPS (recommended for production)
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 ROOT_URLCONF = 'cloudlab.urls'
 
