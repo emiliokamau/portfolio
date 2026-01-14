@@ -5,7 +5,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'emiliokamau35@gmail.com'
-EMAIL_HOST_PASSWORD = 'YOUR_APP_PASSWORD_HERE'  # Replace with your Gmail App Password
+EMAIL_HOST_PASSWORD = '42125811@Kamau'  # Replace with your Gmail App Password
 
 """
 Django settings for cloudlab project.
@@ -65,7 +65,7 @@ SECRET_KEY = env('SECRET_KEY', default='dev-insecure-change-me-please')
 DEBUG = env.bool('DEBUG', default=True)
 
 # Comma-separated hosts in env, e.g. "127.0.0.1,localhost,.railway.app"
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost', '.railway.app'])
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost', '.railway.app', '.vercel.app'])
 
 
 # Application definition
@@ -121,6 +121,16 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Secure cookies when served over HTTPS (recommended for production)
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+
+# Ensure Django builds absolute URLs correctly behind proxy
+USE_X_FORWARDED_HOST = True
+
+# Cookie same-site policies to allow login redirects
+CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SAMESITE = 'Lax'
+
+# Optional: explicit login redirect after successful auth
+LOGIN_REDIRECT_URL = '/airlock/'
 
 ROOT_URLCONF = 'cloudlab.urls'
 
