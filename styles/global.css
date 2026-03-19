@@ -148,7 +148,7 @@ body.dark .landing-desc {
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.2fr 1fr 1fr 1.2fr;
+  grid-template-columns: 1.2fr 1fr 1fr;
   gap: 1.25rem;
 }
 
