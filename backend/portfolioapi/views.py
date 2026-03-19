@@ -4,27 +4,32 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Project, Quest, Resume, Skill
 from .serializers import ProjectSerializer, QuestSerializer, ResumeSerializer, SkillSerializer
-# GET/POST /api/skills
+from .messaging import MessageService
 from rest_framework import permissions
+from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
+from django.conf import settings
+import requests
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 class SkillListCreateView(generics.ListCreateAPIView):
 	queryset = Skill.objects.all().order_by('-created_at')
 	serializer_class = SkillSerializer
 	permission_classes = [permissions.AllowAny]
-from django.core.mail import send_mail
-from django.conf import settings
-import requests
 
-# GET /api/projects
+
 class ProjectListView(generics.ListAPIView):
 	queryset = Project.objects.all().order_by('-date_created')
 	serializer_class = ProjectSerializer
 
-# GET /api/quests
+
 class QuestListView(generics.ListAPIView):
 	queryset = Quest.objects.all()
 	serializer_class = QuestSerializer
 
-# POST /api/quests/vote
+
 class QuestUpvoteView(APIView):
 	def post(self, request):
 		quest_id = request.data.get('id')
@@ -36,43 +41,122 @@ class QuestUpvoteView(APIView):
 		except Quest.DoesNotExist:
 			return Response({'error': 'Quest not found'}, status=status.HTTP_404_NOT_FOUND)
 
-# POST /api/contact
-from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 
 class ContactView(APIView):
+	"""
+	Handle contact form submissions with multi-channel messaging.
+	Supports: Email (SendGrid), WhatsApp (Twilio), SMS (Twilio)
+	"""
 	throttle_classes = [AnonRateThrottle, UserRateThrottle]
+
 	def post(self, request):
-		name = request.data.get('name')
-		email = request.data.get('email')
-		message = request.data.get('message')
-		recaptcha_token = request.data.get('recaptcha_token')
+		# Extract form data
+		name = request.data.get('name', '').strip()
+		email = request.data.get('email', '').strip()
+		phone = request.data.get('phone', '').strip()
+		message = request.data.get('message', '').strip()
+		recaptcha_token = request.data.get('recaptcha_token', '')
+		channels = request.data.get('channels', ['email', 'whatsapp'])
+
+		# Validation
+		if not all([name, email, message]):
+			return Response(
+				{'error': 'Name, email, and message are required'},
+				status=status.HTTP_400_BAD_REQUEST
+			)
+
 		# Verify reCAPTCHA
-		url = 'https://www.google.com/recaptcha/api/siteverify'
-		data = {
-			'secret': settings.RECAPTCHA_SECRET_KEY,
-			'response': recaptcha_token
-		}
-		recaptcha_response = requests.post(url, data=data)
-		result = recaptcha_response.json()
-		if not result.get('success', False):
-			return Response({'error': 'reCAPTCHA verification failed.'}, status=status.HTTP_400_BAD_REQUEST)
-		subject = f'Portfolio Contact from {name}'
-		body = f'From: {name} <{email}>\n\nMessage:\n{message}'
-		send_mail(
-			subject,
-			body,
-			settings.DEFAULT_FROM_EMAIL,
-			['emiliokamau35@gmail.com'],
-			fail_silently=False,
-		)
-		# Send Slack notification
-		slack_url = getattr(settings, 'SLACK_WEBHOOK_URL', None)
-		if slack_url:
-			slack_data = {
-				"text": f"New contact form submission:\n*Name:* {name}\n*Email:* {email}\n*Message:* {message}"
+		if not self._verify_recaptcha(recaptcha_token):
+			return Response(
+				{'error': 'reCAPTCHA verification failed'},
+				status=status.HTTP_400_BAD_REQUEST
+			)
+
+		# Validate channels
+		valid_channels = ['email', 'whatsapp', 'sms']
+		if not isinstance(channels, list):
+			channels = ['email', 'whatsapp']
+		channels = [ch for ch in channels if ch in valid_channels]
+		if not channels:
+			channels = ['email', 'whatsapp']
+
+		# Validate phone only for SMS to visitor
+		if 'sms' in channels and not phone:
+			return Response(
+				{'error': 'Phone number required for SMS notifications'},
+				status=status.HTTP_400_BAD_REQUEST
+			)
+
+		try:
+			# Send messages through unified service
+			result = MessageService.send_contact_notification(
+				name=name,
+				email=email,
+				phone=phone,
+				message=message,
+				channels=channels
+			)
+
+			# Check if at least one channel succeeded
+			success = any(
+				res.get('success', False)
+				for res in result['channels'].values()
+				if isinstance(res, dict)
+			)
+
+			if not success:
+				logger.error(f'All message channels failed for {name}')
+				return Response(
+					{'error': 'Failed to send message through all channels'},
+					status=status.HTTP_500_INTERNAL_SERVER_ERROR
+				)
+
+			response_msg = f'Message sent via: {", ".join(channels)}'
+			logger.info(f'Contact form submitted by {name} ({email}) via {channels}')
+
+			return Response(
+				{
+					'status': 'success',
+					'message': response_msg,
+					'channels': result['channels']
+				},
+				status=status.HTTP_200_OK
+			)
+
+		except Exception as e:
+			logger.error(f'Contact form error: {str(e)}')
+			return Response(
+				{'error': 'An error occurred processing your request'},
+				status=status.HTTP_500_INTERNAL_SERVER_ERROR
+			)
+
+	@staticmethod
+	def _verify_recaptcha(token: str) -> bool:
+		"""
+		Verify reCAPTCHA token with Google.
+
+		Args:
+			token: reCAPTCHA response token
+
+		Returns:
+			True if verification succeeds, False otherwise
+		"""
+		if not token:
+			return False
+
+		if not settings.RECAPTCHA_SECRET_KEY:
+			logger.warning("reCAPTCHA secret key not configured")
+			return False
+
+		try:
+			url = 'https://www.google.com/recaptcha/api/siteverify'
+			data = {
+				'secret': settings.RECAPTCHA_SECRET_KEY,
+				'response': token
 			}
-			try:
-				requests.post(slack_url, json=slack_data)
-			except Exception as e:
-				pass  # Optionally log error
-		return Response({'status': 'Message sent!'}, status=status.HTTP_200_OK)
+			response = requests.post(url, data=data, timeout=5)
+			result = response.json()
+			return result.get('success', False)
+		except Exception as e:
+			logger.error(f'reCAPTCHA verification error: {str(e)}')
+			return False

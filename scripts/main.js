@@ -153,7 +153,9 @@ if (contactForm) {
               alert('Please complete the reCAPTCHA.');
               return;
             }
-            data['g-recaptcha-response'] = recaptchaResponse;
+            data.recaptcha_token = recaptchaResponse;
+            // Always notify portfolio owner via email + WhatsApp.
+            data.channels = ['email', 'whatsapp'];
             try {
               await fetch(`${API_BASE}/api/contact`, {
                 method: 'POST',

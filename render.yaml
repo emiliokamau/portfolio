@@ -1,0 +1,49 @@
+services:
+  - type: web
+    name: portfolio-backend
+    env: python
+    plan: free
+    buildCommand: pip install -r backend/requirements.txt && cd backend && python manage.py migrate
+    startCommand: cd backend && gunicorn cloudlab.wsgi:application
+    workingDirectory: .
+    envVars:
+      - key: DEBUG
+        value: "False"
+      - key: PYTHON_VERSION
+        value: "3.11"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: "*.onrender.com,.vercel.app,localhost,127.0.0.1"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: portfolio-db
+          property: connectionString
+      - key: SENDGRID_API_KEY
+        sync: false
+      - key: SENDGRID_FROM_EMAIL
+        sync: false
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_WHATSAPP_FROM
+        sync: false
+      - key: TWILIO_PHONE_FROM
+        sync: false
+      - key: TWILIO_OWNER_WHATSAPP_TO
+        sync: false
+      - key: TWILIO_WHATSAPP_CONTENT_SID
+        sync: false
+      - key: RECAPTCHA_SECRET_KEY
+        sync: false
+      - key: SLACK_WEBHOOK_URL
+        sync: false
+
+databases:
+  - name: portfolio-db
+    database: portfolio
+    user: portfolio
+    plan: free
+
+env: python

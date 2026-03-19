@@ -2,9 +2,12 @@
 venv/
 */venv/
 .env
+**/.env
+backend/.env
 
 # Python cache and artifacts
 __pycache__/
+**/__pycache__/
 *.pyc
 *.pyo
 *.pyd

@@ -5,5 +5,10 @@ django-environ
 gunicorn
 requests
 Pillow
-# If using Postgres on Railway, uncomment:
+# Email service (SendGrid)
+sendgrid>=6.10.0
+django-sendgrid-v5>=1.0.0
+# WhatsApp/SMS service (Twilio)
+twilio>=9.0.0
+# Database (Postgres)
 psycopg2-binary
