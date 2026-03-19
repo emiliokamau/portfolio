@@ -10,7 +10,7 @@ class Command(BaseCommand):
         User = get_user_model()
         username = (os.environ.get('DJANGO_SUPERUSER_USERNAME') or '').strip()
         email = (os.environ.get('DJANGO_SUPERUSER_EMAIL') or '').strip()
-        password = (os.environ.get('DJANGO_SUPERUSER_PASSWORD') or '').strip()
+        password = os.environ.get('DJANGO_SUPERUSER_PASSWORD') or ''
 
         if not (username and email and password):
             self.stdout.write(self.style.WARNING("Superuser env vars not set. Skipping creation."))
@@ -33,10 +33,11 @@ class Command(BaseCommand):
         if user:
             user.email = email
             user.username = username
+            user.is_active = True
             user.is_staff = True
             user.is_superuser = True
             user.set_password(password)
-            user.save(update_fields=['username', 'email', 'is_staff', 'is_superuser', 'password'])
+            user.save(update_fields=['username', 'email', 'is_active', 'is_staff', 'is_superuser', 'password'])
             self.stdout.write(self.style.SUCCESS(f"Updated superuser credentials: {username}"))
             return
 
