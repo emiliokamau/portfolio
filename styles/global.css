@@ -348,6 +348,32 @@ body.dark .sidebar {
   color: #6fc3ff;
 }
 
+body.dark .section-kicker {
+  color: #90bdf8;
+}
+
+body.dark .section-subtitle {
+  color: #c1d9ff;
+}
+
+body.dark .section-story,
+body.dark .section-caption,
+body.dark .narrative-card p,
+body.dark .experience-stop p {
+  color: #d4e2f8;
+}
+
+body.dark .narrative-card,
+body.dark .experience-stop {
+  background: rgba(19, 29, 46, 0.75);
+  border-color: rgba(129, 172, 241, 0.32);
+}
+
+body.dark .narrative-card h3,
+body.dark .experience-stop h3 {
+  color: #b4d2ff;
+}
+
 .sidebar {
   width: 220px;
   background: #f3e7fe;
@@ -490,6 +516,78 @@ a:focus, button:focus, input:focus, textarea:focus {
   color: #6fc3ff;
   margin: 2rem 0 1rem 0;
   text-align: center;
+}
+
+.section-intro-copy {
+  max-width: 860px;
+  margin: 0 auto 1.5rem;
+  text-align: left;
+}
+
+.section-kicker {
+  margin: 0 0 0.45rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #2f77c7;
+}
+
+.section-subtitle {
+  margin: 0 0 0.6rem;
+  font-size: 1.35rem;
+  color: #1e4f96;
+  font-family: 'Nunito', 'Quicksand', sans-serif;
+}
+
+.section-story {
+  margin: 0;
+  font-size: 1.03rem;
+  line-height: 1.75;
+  color: #3a4f69;
+}
+
+.section-caption {
+  margin: 1.2rem 0 0.8rem;
+  text-align: center;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #4e77b2;
+  font-weight: 700;
+}
+
+.narrative-grid,
+.experience-rail {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0 auto;
+}
+
+.narrative-card,
+.experience-stop {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(106, 151, 224, 0.28);
+  border-radius: 14px;
+  padding: 1rem 1rem 0.95rem;
+  box-shadow: 0 8px 24px rgba(65, 109, 182, 0.09);
+}
+
+.narrative-card h3,
+.experience-stop h3 {
+  margin: 0 0 0.45rem;
+  font-size: 1rem;
+  color: #2359a6;
+  font-family: 'Nunito', 'Quicksand', sans-serif;
+}
+
+.narrative-card p,
+.experience-stop p {
+  margin: 0;
+  color: #3d5471;
+  line-height: 1.65;
+  font-size: 0.96rem;
 }
 
 /* Skills Dashboard */
@@ -679,6 +777,17 @@ a:focus, button:focus, input:focus, textarea:focus {
     .contact-section {
       padding-left: 0.9rem;
       padding-right: 0.9rem;
+    }
+    .section-intro-copy {
+      text-align: center;
+    }
+    .section-subtitle {
+      font-size: 1.2rem;
+    }
+    .narrative-grid,
+    .experience-rail {
+      grid-template-columns: 1fr;
+      gap: 0.8rem;
     }
     .main-footer {
       margin-left: 0 !important;
