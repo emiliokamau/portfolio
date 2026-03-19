@@ -235,14 +235,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const sidebarFab = document.querySelector('.sidebar-fab');
   const darkBtn = document.querySelector('.dark-toggle-btn');
   const sidebarToggle = document.getElementById('sidebar-toggle');
+  const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
   const firstSidebarLink = document.querySelector('.sidebar-nav a');
   let lastFocusedBeforeOpen = null;
+
+  const setDarkToggleState = () => {
+    if (!darkBtn) return;
+    const isDark = body.classList.contains('dark');
+    darkBtn.textContent = isDark ? '☀️' : '🌙';
+    darkBtn.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+    darkBtn.setAttribute('title', isDark ? 'Light mode' : 'Dark mode');
+  };
 
   // Apply saved theme
   const savedTheme = localStorage.getItem('theme');
   if (savedTheme === 'dark') {
     body.classList.add('dark');
   }
+  setDarkToggleState();
 
   // Apply saved sidebar state
   const savedSidebar = localStorage.getItem('sidebarCollapsed');
@@ -256,6 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
       body.classList.toggle('dark');
       const isDark = body.classList.contains('dark');
       localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      setDarkToggleState();
     });
   }
 
@@ -297,6 +308,19 @@ document.addEventListener('DOMContentLoaded', () => {
       if (lastFocusedBeforeOpen && lastFocusedBeforeOpen.focus) {
         lastFocusedBeforeOpen.focus();
       }
+    });
+  }
+
+  // On mobile, close overlay after navigation tap.
+  if (sidebarLinks.length && sidebar) {
+    sidebarLinks.forEach((link) => {
+      link.addEventListener('click', () => {
+        if (window.matchMedia('(max-width: 900px)').matches) {
+          sidebar.classList.remove('collapsed');
+          localStorage.setItem('sidebarCollapsed', 'false');
+          body.classList.remove('noscroll');
+        }
+      });
     });
   }
 });
