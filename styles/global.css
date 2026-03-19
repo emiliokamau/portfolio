@@ -174,6 +174,10 @@ body.dark .footer-links a:hover, body.dark .footer-links a:focus {
 .dark-toggle-btn:hover, .dark-toggle-btn:focus {
   background: rgba(255,255,255,0.2);
 }
+
+.sidebar-fab {
+  display: none;
+}
 body.dark {
   background: #181c24;
   color: #eee;
@@ -511,8 +515,17 @@ a:focus, button:focus, input:focus, textarea:focus {
       padding: 1rem;
       margin-left: 0 !important; /* overlay does not push content */
     }
+    .landing-section,
+    .projects-section,
+    .skills-section,
+    .goals-section,
+    .contact-section {
+      padding-left: 0.9rem;
+      padding-right: 0.9rem;
+    }
     .main-footer {
       margin-left: 0 !important;
+      padding: 1.25rem 0.75rem;
     }
     /* Backdrop behind the sidebar overlay */
     .sidebar-backdrop {
@@ -538,6 +551,7 @@ a:focus, button:focus, input:focus, textarea:focus {
     }
       /* Floating toggle button visible when sidebar is hidden */
       .sidebar-fab {
+        display: block;
         position: fixed;
         top: 0.75rem;
         left: 0.75rem;
@@ -554,6 +568,27 @@ a:focus, button:focus, input:focus, textarea:focus {
         box-shadow: 0 6px 16px rgba(0,0,0,0.2);
       }
       body.dark .sidebar-fab { background: #2056b3; }
+    .footer-links {
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .landing-title {
+      font-size: 1.55rem;
+      text-align: center;
+    }
+    .landing-desc {
+      font-size: 1rem;
+      line-height: 1.55;
+      text-align: center;
+    }
+    .landing-languages {
+      justify-content: center;
+    }
+    .lang-badge {
+      font-size: 0.92rem;
+      padding: 0.35rem 0.8rem;
+    }
     .enlarged-profile {
       flex-direction: column;
       gap: 1.5rem;
@@ -753,5 +788,105 @@ a:focus, button:focus, input:focus, textarea:focus {
   .hero-illustration img {
     width: 90px;
     border-radius: 8px;
+  }
+}
+
+/* Mobile polish pass */
+.dark-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #1f4ca4;
+  font-weight: 700;
+}
+
+body.dark .dark-toggle-btn {
+  color: #ffd86b;
+  background: rgba(255, 216, 107, 0.12);
+}
+
+@media (max-width: 900px) {
+  body {
+    font-size: 16px;
+  }
+
+  .main-content {
+    padding-top: 4rem;
+  }
+
+  .landing-section.glass,
+  .skills-section.glass,
+  .projects-section.glass,
+  .goals-section.glass,
+  .contact-section.glass {
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(31, 38, 135, 0.14);
+  }
+
+  .project-card {
+    width: 100%;
+    max-width: 480px;
+    border-radius: 14px;
+  }
+
+  .card-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+  }
+
+  .btn,
+  .sidebar-nav a,
+  .contact-icon {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    border-radius: 10px;
+  }
+
+  .footer-content {
+    gap: 0.75rem;
+    text-align: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .main-content {
+    padding: 4rem 0.75rem 1rem;
+  }
+
+  .landing-title {
+    font-size: 1.35rem;
+    line-height: 1.25;
+  }
+
+  .landing-desc,
+  .hero-sub {
+    font-size: 0.98rem;
+    line-height: 1.55;
+  }
+
+  .lang-badge {
+    font-size: 0.85rem;
+    padding: 0.3rem 0.65rem;
+  }
+
+  .skills-dashboard,
+  .contact-links {
+    justify-content: center;
+  }
+
+  .card-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    padding-top: 0.75rem;
   }
 }
