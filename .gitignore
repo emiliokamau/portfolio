@@ -43,3 +43,9 @@ htmlcov/
 *.env
 .env.local
 .env.production
+
+# Local-only docs and agent config
+backend/.env.example
+DEPLOYMENT_GUIDE.md
+MESSAGING_INTEGRATION_GUIDE.md
+.github/
