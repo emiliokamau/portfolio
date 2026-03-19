@@ -218,7 +218,6 @@ TWILIO_WHATSAPP_CONTENT_SID = env('TWILIO_WHATSAPP_CONTENT_SID', default='')  # 
 
 # Integrations
 SLACK_WEBHOOK_URL = env('SLACK_WEBHOOK_URL', default='')
-RECAPTCHA_SECRET_KEY = env('RECAPTCHA_SECRET_KEY', default='')
 
 # Frontend routing
 FRONTEND_BASE_URL = env('FRONTEND_BASE_URL', default='https://emiliokamau.vercel.app')

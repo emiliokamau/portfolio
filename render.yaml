@@ -33,8 +33,6 @@ services:
         sync: false
       - key: TWILIO_WHATSAPP_CONTENT_SID
         sync: false
-      - key: RECAPTCHA_SECRET_KEY
-        sync: false
       - key: SLACK_WEBHOOK_URL
         sync: false
       - key: DJANGO_SUPERUSER_USERNAME

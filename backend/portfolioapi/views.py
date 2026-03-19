@@ -9,8 +9,6 @@ from rest_framework import permissions
 from rest_framework.permissions import SAFE_METHODS
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
-from django.conf import settings
-import requests
 import logging
 
 logger = logging.getLogger(__name__)
@@ -68,20 +66,12 @@ class ContactView(APIView):
 		email = request.data.get('email', '').strip()
 		phone = request.data.get('phone', '').strip()
 		message = request.data.get('message', '').strip()
-		recaptcha_token = request.data.get('recaptcha_token', '')
 		channels = request.data.get('channels', ['email', 'whatsapp'])
 
 		# Validation
 		if not all([name, email, message]):
 			return Response(
 				{'error': 'Name, email, and message are required'},
-				status=status.HTTP_400_BAD_REQUEST
-			)
-
-		# Verify reCAPTCHA
-		if not self._verify_recaptcha(recaptcha_token):
-			return Response(
-				{'error': 'reCAPTCHA verification failed'},
 				status=status.HTTP_400_BAD_REQUEST
 			)
 
@@ -142,34 +132,3 @@ class ContactView(APIView):
 				{'error': 'An error occurred processing your request'},
 				status=status.HTTP_500_INTERNAL_SERVER_ERROR
 			)
-
-	@staticmethod
-	def _verify_recaptcha(token: str) -> bool:
-		"""
-		Verify reCAPTCHA token with Google.
-
-		Args:
-			token: reCAPTCHA response token
-
-		Returns:
-			True if verification succeeds, False otherwise
-		"""
-		if not token:
-			return False
-
-		if not settings.RECAPTCHA_SECRET_KEY:
-			logger.warning("reCAPTCHA secret key not configured")
-			return False
-
-		try:
-			url = 'https://www.google.com/recaptcha/api/siteverify'
-			data = {
-				'secret': settings.RECAPTCHA_SECRET_KEY,
-				'response': token
-			}
-			response = requests.post(url, data=data, timeout=5)
-			result = response.json()
-			return result.get('success', False)
-		except Exception as e:
-			logger.error(f'reCAPTCHA verification error: {str(e)}')
-			return False

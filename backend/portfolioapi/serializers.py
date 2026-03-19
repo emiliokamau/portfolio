@@ -51,10 +51,6 @@ class ContactSerializer(serializers.Serializer):
 		required=True,
 		error_messages={'required': 'Message is required'}
 	)
-	recaptcha_token = serializers.CharField(
-		required=True,
-		error_messages={'required': 'reCAPTCHA verification required'}
-	)
 	channels = serializers.ListField(
 		child=serializers.CharField(max_length=20),
 		required=False,

@@ -141,62 +141,12 @@ loadQuests();
 
 
 // --- Contact Form Submission ---
-let recaptchaWidgetId = null;
-
-function initRecaptchaWidget() {
-  const widget = document.querySelector('.g-recaptcha');
-  if (!widget) return;
-
-  const siteKey = (typeof window !== 'undefined' && window.RECAPTCHA_SITE_KEY)
-    ? window.RECAPTCHA_SITE_KEY
-    : widget.getAttribute('data-sitekey');
-
-  if (!siteKey) return;
-
-  widget.setAttribute('data-sitekey', siteKey);
-
-  const renderIfReady = () => {
-    if (typeof grecaptcha === 'undefined' || typeof grecaptcha.render !== 'function') {
-      return false;
-    }
-    if (recaptchaWidgetId === null) {
-      recaptchaWidgetId = grecaptcha.render(widget, { sitekey: siteKey });
-    }
-    return true;
-  };
-
-  if (typeof grecaptcha !== 'undefined' && typeof grecaptcha.ready === 'function') {
-    grecaptcha.ready(renderIfReady);
-    return;
-  }
-
-  let attempts = 0;
-  const maxAttempts = 40;
-  const timer = setInterval(() => {
-    attempts += 1;
-    if (renderIfReady() || attempts >= maxAttempts) {
-      clearInterval(timer);
-    }
-  }, 250);
-}
-
 const contactForm = document.querySelector('.contact-form');
 if (contactForm) {
   contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(contactForm);
     const data = Object.fromEntries(formData.entries());
-            // Get reCAPTCHA token
-            if (typeof grecaptcha === 'undefined' || recaptchaWidgetId === null) {
-              alert('reCAPTCHA is still loading. Please wait a moment and try again.');
-              return;
-            }
-            const recaptchaResponse = grecaptcha.getResponse(recaptchaWidgetId);
-            if (!recaptchaResponse) {
-              alert('Please complete the reCAPTCHA.');
-              return;
-            }
-            data.recaptcha_token = recaptchaResponse;
             // Always notify portfolio owner via email + WhatsApp.
             data.channels = ['email', 'whatsapp'];
             try {
@@ -207,7 +157,6 @@ if (contactForm) {
               });
               alert('Message sent!');
               contactForm.reset();
-              grecaptcha.reset(recaptchaWidgetId);
             } catch (err) {
               alert('Failed to send message.');
             }
@@ -227,8 +176,6 @@ if (btnPrimary) {
 
 // --- Dark Mode + Sidebar Persistence ---
 document.addEventListener('DOMContentLoaded', () => {
-  initRecaptchaWidget();
-
   const body = document.body;
   const sidebar = document.querySelector('.sidebar');
   const sidebarBackdrop = document.querySelector('.sidebar-backdrop');

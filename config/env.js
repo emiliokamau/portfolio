@@ -1,8 +1,6 @@
 // Frontend Configuration
 // Point to your deployed backend (update this with your Render backend URL once deployed)
 
-window.RECAPTCHA_SITE_KEY = '6Ldh-EosAAAAAEW2LY03WUJtN-ev_mMpEBI4FauR';
-
 // Set API_BASE based on environment
 const hostname = window.location.hostname;
 const isProduction = hostname.includes('vercel.app') || hostname.includes('netlify.app');
