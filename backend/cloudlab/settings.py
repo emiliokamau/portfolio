@@ -32,8 +32,22 @@ SECRET_KEY = env('SECRET_KEY', default='dev-insecure-change-me-please')
 # Default True for local dev; set DEBUG=False in production env
 DEBUG = env.bool('DEBUG', default=True)
 
+def _normalize_host(value: str) -> str:
+    host = value.strip()
+    if host.startswith('http://'):
+        host = host[len('http://'):]
+    elif host.startswith('https://'):
+        host = host[len('https://'):]
+    return host.rstrip('/')
+
+
 # Comma-separated hosts in env, e.g. "127.0.0.1,localhost,.onrender.com,.railway.app,.vercel.app"
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost', '.onrender.com', '.railway.app', '.vercel.app'])
+_default_hosts = ['127.0.0.1', 'localhost', '.onrender.com', '.railway.app', '.vercel.app']
+_env_hosts = env.list('ALLOWED_HOSTS', default=_default_hosts)
+_render_host = env('RENDER_EXTERNAL_HOSTNAME', default='')
+if _render_host:
+    _env_hosts.append(_render_host)
+ALLOWED_HOSTS = list(dict.fromkeys([_normalize_host(h) for h in _env_hosts if h and _normalize_host(h)]))
 
 
 # Application definition
