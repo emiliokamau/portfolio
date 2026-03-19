@@ -32,8 +32,8 @@ SECRET_KEY = env('SECRET_KEY', default='dev-insecure-change-me-please')
 # Default True for local dev; set DEBUG=False in production env
 DEBUG = env.bool('DEBUG', default=True)
 
-# Comma-separated hosts in env, e.g. "127.0.0.1,localhost,.render.com,.railway.app,.vercel.app"
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost', '.render.com', '.railway.app', '.vercel.app'])
+# Comma-separated hosts in env, e.g. "127.0.0.1,localhost,.onrender.com,.railway.app,.vercel.app"
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost', '.onrender.com', '.railway.app', '.vercel.app'])
 
 
 # Application definition
