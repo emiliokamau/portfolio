@@ -3,8 +3,8 @@ services:
     name: portfolio-backend
     env: python
     plan: free
-    buildCommand: pip install -r backend/requirements.txt && cd backend && python manage.py migrate && python manage.py collectstatic --noinput
-    startCommand: cd backend && gunicorn cloudlab.wsgi:application --bind 0.0.0.0:$PORT --workers ${WEB_CONCURRENCY:-1} --timeout 120
+    buildCommand: pip install -r backend/requirements.txt && cd backend && python manage.py collectstatic --noinput
+    startCommand: cd backend && (python manage.py migrate --noinput || true) && (python manage.py create_default_superuser || true) && gunicorn cloudlab.wsgi:application --bind 0.0.0.0:$PORT --workers ${WEB_CONCURRENCY:-1} --timeout 120
     workingDirectory: .
     envVars:
       - key: DEBUG
@@ -36,6 +36,12 @@ services:
       - key: RECAPTCHA_SECRET_KEY
         sync: false
       - key: SLACK_WEBHOOK_URL
+        sync: false
+      - key: DJANGO_SUPERUSER_USERNAME
+        sync: false
+      - key: DJANGO_SUPERUSER_EMAIL
+        sync: false
+      - key: DJANGO_SUPERUSER_PASSWORD
         sync: false
 
 env: python
