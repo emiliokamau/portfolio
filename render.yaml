@@ -3,7 +3,7 @@ services:
     name: portfolio-backend
     env: python
     plan: free
-    buildCommand: pip install -r backend/requirements.txt && cd backend && python manage.py migrate
+    buildCommand: pip install -r backend/requirements.txt && cd backend && python manage.py migrate && python manage.py collectstatic --noinput
     startCommand: cd backend && gunicorn cloudlab.wsgi:application
     workingDirectory: .
     envVars:

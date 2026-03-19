@@ -3,6 +3,7 @@ djangorestframework
 django-cors-headers
 django-environ
 gunicorn
+whitenoise
 requests
 Pillow
 # Email service (SendGrid)
