@@ -10,6 +10,9 @@ from rest_framework.permissions import SAFE_METHODS
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 import logging
+from django.conf import settings
+from .serializers import CredentialRequestSerializer
+from .models import CredentialDownloadRequest
 
 logger = logging.getLogger(__name__)
 
@@ -132,3 +135,82 @@ class ContactView(APIView):
 				{'error': 'An error occurred processing your request'},
 				status=status.HTTP_500_INTERNAL_SERVER_ERROR
 			)
+
+
+class CredentialRequestView(APIView):
+	"""Send requested credentials to visitor email and notify portfolio owner."""
+	throttle_classes = [AnonRateThrottle, UserRateThrottle]
+
+	def post(self, request):
+		serializer = CredentialRequestSerializer(data=request.data)
+		if not serializer.is_valid():
+			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+		validated = serializer.validated_data
+		document_type = validated['document_type']
+		doc = Resume.objects.filter(doc_type=document_type).order_by('-uploaded_at').first()
+		if not doc or not doc.file:
+			return Response(
+				{'error': f'{document_type} is not available yet. Please upload it in admin first.'},
+				status=status.HTTP_404_NOT_FOUND,
+			)
+
+		req = CredentialDownloadRequest.objects.create(
+			full_name=validated.get('full_name', ''),
+			email=validated['email'],
+			document_type=document_type,
+			consent_given=validated['consent_given'],
+			ip_address=request.META.get('REMOTE_ADDR'),
+			user_agent=(request.META.get('HTTP_USER_AGENT', '')[:255]),
+		)
+
+		doc_label = dict(Resume.DOCUMENT_TYPES).get(document_type, document_type)
+		visitor_subject = f'Your requested {doc_label} from The Cloud Lab'
+		visitor_body = (
+			f"Hello {validated.get('full_name') or 'there'},\n\n"
+			f"Attached is the {doc_label} you requested from Emilio Kamau's portfolio.\n"
+			"Thank you for your interest.\n\n"
+			"Regards,\nThe Cloud Lab"
+		)
+		visitor_result = MessageService.send_email_with_attachments(
+			subject=visitor_subject,
+			recipient=validated['email'],
+			body=visitor_body,
+			attachment_paths=[doc.file.path],
+		)
+
+		owner_email = getattr(settings, 'ADMIN_EMAIL', settings.DEFAULT_FROM_EMAIL)
+		notify_subject = f'Credential download request: {doc_label}'
+		notify_body = (
+			"A portfolio visitor requested your credential document.\n\n"
+			f"Name: {validated.get('full_name', 'Not provided')}\n"
+			f"Email: {validated['email']}\n"
+			f"Document: {doc_label}\n"
+			f"Consent Given: {validated['consent_given']}\n"
+		)
+		notify_result = MessageService.send_email(
+			subject=notify_subject,
+			recipient=owner_email,
+			body=notify_body,
+		)
+
+		if visitor_result.get('success'):
+			req.status = 'sent'
+			req.status_message = 'Credential sent to visitor email.'
+			req.save(update_fields=['status', 'status_message'])
+			return Response(
+				{
+					'status': 'success',
+					'message': f'{doc_label} has been sent to {validated["email"]}.',
+					'owner_notified': notify_result.get('success', False),
+				},
+				status=status.HTTP_200_OK,
+			)
+
+		req.status = 'failed'
+		req.status_message = visitor_result.get('error', 'Failed to send credential email.')
+		req.save(update_fields=['status', 'status_message'])
+		return Response(
+			{'error': 'Failed to send the requested document. Please try again later.'},
+			status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+		)

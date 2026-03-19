@@ -38,6 +38,7 @@ urlpatterns = [
     path('styles/<path:path>', serve, {'document_root': str(PROJECT_ROOT / 'styles')}),
     path('scripts/<path:path>', serve, {'document_root': str(PROJECT_ROOT / 'scripts')}),
     path('config/<path:path>', serve, {'document_root': str(PROJECT_ROOT / 'config')}),
+    path('media/<path:path>', serve, {'document_root': settings.MEDIA_ROOT}),
     # Use a custom admin URL path to help prevent automated bot scanning and brute-force attacks
     path('airlock/', admin.site.urls),
     path('api/', include('portfolioapi.urls')),

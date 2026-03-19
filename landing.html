@@ -44,7 +44,37 @@
         </div>
       </div>
     </section>
+
+    <section class="credentials-section glass" aria-labelledby="credentials-title">
+      <h2 id="credentials-title" class="section-title">Request My Professional Documents</h2>
+      <p class="credentials-copy">Request my CV, Resume, or Cover Letter. Once you submit your email and consent, the selected document is delivered to your inbox and I receive a notification for transparency.</p>
+      <div class="credential-actions">
+        <button type="button" class="btn btn-secondary credential-request-btn" data-document="cv">Request CV</button>
+        <button type="button" class="btn btn-secondary credential-request-btn" data-document="resume">Request Resume</button>
+        <button type="button" class="btn btn-secondary credential-request-btn" data-document="cover_letter">Request Cover Letter</button>
+      </div>
+      <p id="credential-request-message" class="credential-status" aria-live="polite"></p>
+    </section>
   </main>
+
+  <div class="credential-modal" id="credential-modal" aria-hidden="true">
+    <div class="credential-modal-panel" role="dialog" aria-modal="true" aria-labelledby="credential-modal-title">
+      <button type="button" class="credential-modal-close" id="credential-modal-close" aria-label="Close document request form">&times;</button>
+      <h3 id="credential-modal-title">Request Document</h3>
+      <p class="credential-modal-copy">Enter your email to receive the selected document and confirm consent so I can be notified of your request.</p>
+      <form id="credential-request-form" class="credential-request-form">
+        <input type="hidden" id="credential-document-type" name="document_type" />
+        <input type="text" id="credential-full-name" name="full_name" placeholder="Full Name (optional)" aria-label="Full Name" />
+        <input type="email" id="credential-email" name="email" placeholder="Your Email Address" aria-label="Your Email Address" required />
+        <label class="credential-consent">
+          <input type="checkbox" id="credential-consent" name="consent_given" required />
+          <span>I allow my email to be shared with Emilio Kamau for download notification purposes.</span>
+        </label>
+        <button type="submit" class="btn btn-primary">Send Document To My Email</button>
+      </form>
+    </div>
+  </div>
+
   <footer class="main-footer">
     <div class="footer-shell">
       <div class="footer-grid">
@@ -77,7 +107,7 @@
 
       <div class="footer-bottom">
         <p>&copy; 2026 The Cloud Lab. All rights reserved.</p>
-        <p>Created by Emilio Kamau (Fullstack Developer: +254796526647)</p>
+        <p>Created by Emilio Kamau (Fullstack Developer)</p>
       </div>
     </div>
   </footer>

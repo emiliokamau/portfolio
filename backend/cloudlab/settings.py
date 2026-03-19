@@ -196,6 +196,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Email settings: SendGrid
 # Using SendGrid to avoid conflicts with other applications using same SMTP
 DEFAULT_FROM_EMAIL = env('SENDGRID_FROM_EMAIL', default='noreply@portfolio.local')
+ADMIN_EMAIL = env('ADMIN_EMAIL', default=DEFAULT_FROM_EMAIL)
 EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
 SENDGRID_API_KEY = env('SENDGRID_API_KEY', default='')
 

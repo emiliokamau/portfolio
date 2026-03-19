@@ -17,6 +17,8 @@ class Project(models.Model):
 	description = models.TextField()
 	tech_stack = models.JSONField(default=list)
 	thumbnail_image = models.ImageField(upload_to='projects/thumbnails/')
+	image_two = models.ImageField(upload_to='projects/gallery/', blank=True, null=True)
+	image_three = models.ImageField(upload_to='projects/gallery/', blank=True, null=True)
 	video_url = models.URLField(blank=True, null=True)
 	live_demo_link = models.URLField(blank=True, null=True)
 	github_link = models.URLField(blank=True, null=True)
@@ -40,8 +42,37 @@ class Quest(models.Model):
 		return self.task_name
 
 class Resume(models.Model):
-	file = models.FileField(upload_to='resume/')
+	DOCUMENT_TYPES = [
+		('cv', 'CV'),
+		('resume', 'Resume'),
+		('cover_letter', 'Cover Letter'),
+	]
+	title = models.CharField(max_length=120, blank=True)
+	doc_type = models.CharField(max_length=20, choices=DOCUMENT_TYPES, default='resume')
+	file = models.FileField(upload_to='credentials/')
 	uploaded_at = models.DateTimeField(auto_now_add=True)
 
 	def __str__(self):
-		return f"Resume uploaded at {self.uploaded_at}"
+		label = dict(self.DOCUMENT_TYPES).get(self.doc_type, self.doc_type)
+		return f"{label} uploaded at {self.uploaded_at}"
+
+
+class CredentialDownloadRequest(models.Model):
+	STATUS_CHOICES = [
+		('pending', 'Pending'),
+		('sent', 'Sent'),
+		('failed', 'Failed'),
+	]
+
+	full_name = models.CharField(max_length=120, blank=True)
+	email = models.EmailField()
+	document_type = models.CharField(max_length=20, choices=Resume.DOCUMENT_TYPES)
+	consent_given = models.BooleanField(default=False)
+	ip_address = models.GenericIPAddressField(blank=True, null=True)
+	user_agent = models.CharField(max_length=255, blank=True)
+	status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+	status_message = models.TextField(blank=True)
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		return f"{self.email} requested {self.document_type} ({self.status})"

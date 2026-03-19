@@ -374,6 +374,33 @@ body.dark .experience-stop h3 {
   color: #b4d2ff;
 }
 
+body.dark .project-thumb {
+  background: #0f1e37;
+  border-color: rgba(123, 166, 236, 0.35);
+}
+
+body.dark .credentials-copy,
+body.dark .credential-modal-copy,
+body.dark .credential-consent {
+  color: #d6e4fb;
+}
+
+body.dark .credential-modal-panel {
+  background: #111e33;
+  border-color: rgba(123, 166, 236, 0.36);
+}
+
+body.dark .credential-modal-close {
+  color: #b7d4ff;
+}
+
+body.dark .credential-request-form input[type="text"],
+body.dark .credential-request-form input[type="email"] {
+  background: #0a172a;
+  color: #e8f0ff;
+  border-color: rgba(123, 166, 236, 0.4);
+}
+
 .sidebar {
   width: 220px;
   background: #f3e7fe;
@@ -653,6 +680,47 @@ a:focus, button:focus, input:focus, textarea:focus {
   border-radius: 12px;
   margin-bottom: 1rem;
 }
+
+.project-gallery {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.project-main-image {
+  width: 100%;
+  border-radius: 12px;
+  height: 190px;
+  object-fit: cover;
+  border: 1px solid rgba(100, 140, 210, 0.25);
+}
+
+.project-thumbs {
+  margin-top: 0.45rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.project-thumb {
+  border: 1px solid rgba(100, 140, 210, 0.25);
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 0;
+  cursor: pointer;
+}
+
+.project-thumb img {
+  width: 100%;
+  height: 52px;
+  object-fit: cover;
+  border-radius: 9px;
+  margin: 0;
+}
+
+.project-thumb.is-active {
+  border-color: #2ea6ff;
+  box-shadow: 0 0 0 2px rgba(46, 166, 255, 0.24);
+}
 .tech-tags {
   font-size: 0.95rem;
   color: #6fc3ff;
@@ -746,6 +814,106 @@ a:focus, button:focus, input:focus, textarea:focus {
   background: #f3e7fe;
 }
 
+.credentials-section {
+  margin: 1rem auto 2.2rem;
+  max-width: 900px;
+  padding: 1.5rem 2rem 2rem;
+}
+
+.credentials-copy {
+  margin: 0 auto 1rem;
+  max-width: 780px;
+  text-align: center;
+  color: #39557a;
+  line-height: 1.7;
+}
+
+.credential-actions {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.credential-status {
+  margin: 0.8rem 0 0;
+  text-align: center;
+  color: #2d6fb6;
+  min-height: 1.4rem;
+}
+
+.credential-status.error {
+  color: #c74949;
+}
+
+.credential-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 17, 34, 0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 1rem;
+}
+
+.credential-modal.open {
+  display: flex;
+}
+
+.credential-modal-panel {
+  width: min(520px, 94vw);
+  background: #f8fbff;
+  border-radius: 16px;
+  border: 1px solid rgba(98, 146, 228, 0.3);
+  box-shadow: 0 18px 50px rgba(10, 24, 52, 0.28);
+  padding: 1.2rem 1.15rem 1.1rem;
+  position: relative;
+}
+
+.credential-modal-close {
+  position: absolute;
+  right: 0.65rem;
+  top: 0.45rem;
+  border: none;
+  background: transparent;
+  font-size: 1.55rem;
+  color: #2c5d9f;
+  cursor: pointer;
+}
+
+.credential-modal-copy {
+  margin: 0.25rem 0 0.85rem;
+  color: #3f5879;
+}
+
+.credential-request-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.credential-request-form input[type="text"],
+.credential-request-form input[type="email"] {
+  border: 1px solid rgba(100, 140, 210, 0.35);
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 0.62rem 0.75rem;
+}
+
+.credential-consent {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  color: #2f4f7a;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.credential-consent input {
+  margin-top: 0.2rem;
+}
+
 @media (max-width: 900px) {
     /* Mobile: sidebar becomes full-screen overlay */
     .sidebar {
@@ -775,6 +943,10 @@ a:focus, button:focus, input:focus, textarea:focus {
     .skills-section,
     .goals-section,
     .contact-section {
+      padding-left: 0.9rem;
+      padding-right: 0.9rem;
+    }
+    .credentials-section {
       padding-left: 0.9rem;
       padding-right: 0.9rem;
     }
@@ -854,6 +1026,12 @@ a:focus, button:focus, input:focus, textarea:focus {
     .landing-cta {
       justify-content: center;
       width: 100%;
+    }
+    .credential-actions {
+      flex-direction: column;
+      align-items: stretch;
+      max-width: 320px;
+      margin: 0 auto;
     }
     .lang-badge {
       font-size: 0.92rem;

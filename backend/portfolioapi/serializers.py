@@ -1,6 +1,6 @@
 # Serializers for Project, Quest, Resume, Skill, and Contact
 from rest_framework import serializers
-from .models import Project, Quest, Resume, Skill
+from .models import Project, Quest, Resume, Skill, CredentialDownloadRequest
 
 
 class SkillSerializer(serializers.ModelSerializer):
@@ -10,9 +10,23 @@ class SkillSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
+	image_gallery = serializers.SerializerMethodField(read_only=True)
+
 	class Meta:
 		model = Project
 		fields = '__all__'
+
+	def get_image_gallery(self, obj):
+		request = self.context.get('request')
+		images = []
+		for field_name in ['thumbnail_image', 'image_two', 'image_three']:
+			image_field = getattr(obj, field_name, None)
+			if image_field:
+				url = image_field.url
+				if request is not None:
+					url = request.build_absolute_uri(url)
+				images.append(url)
+		return images
 
 
 class QuestSerializer(serializers.ModelSerializer):
@@ -25,6 +39,17 @@ class ResumeSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Resume
 		fields = '__all__'
+
+
+class CredentialRequestSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = CredentialDownloadRequest
+		fields = ['full_name', 'email', 'document_type', 'consent_given']
+
+	def validate_consent_given(self, value):
+		if value is not True:
+			raise serializers.ValidationError('Consent is required before requesting credentials.')
+		return value
 
 
 class ContactSerializer(serializers.Serializer):

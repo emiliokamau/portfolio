@@ -6,6 +6,7 @@ Handles both SendGrid (email) and Twilio (WhatsApp/SMS) to avoid service collisi
 import logging
 from django.conf import settings
 from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 import requests
 
 logger = logging.getLogger(__name__)
@@ -63,6 +64,47 @@ class MessageService:
             }
         except Exception as e:
             logger.error(f"Failed to send email to {recipient}: {str(e)}")
+            return {
+                "success": False,
+                "channel": "email",
+                "error": str(e),
+            }
+
+    @staticmethod
+    def send_email_with_attachments(
+        subject: str,
+        recipient: str,
+        body: str,
+        attachment_paths: list,
+    ) -> dict:
+        """Send an email with file attachments via configured email backend."""
+        if not settings.SENDGRID_API_KEY:
+            logger.warning("SendGrid API key not configured")
+            return {
+                "success": False,
+                "error": "Email service not configured",
+                "channel": "email",
+            }
+
+        try:
+            email = EmailMessage(
+                subject=subject,
+                body=body,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[recipient],
+            )
+            for path in attachment_paths:
+                email.attach_file(path)
+            email.send(fail_silently=False)
+            logger.info(f"Email with attachments sent to {recipient}: {subject}")
+            return {
+                "success": True,
+                "channel": "email",
+                "recipient": recipient,
+                "message": "Email with attachments sent successfully",
+            }
+        except Exception as e:
+            logger.error(f"Failed to send attachment email to {recipient}: {str(e)}")
             return {
                 "success": False,
                 "channel": "email",

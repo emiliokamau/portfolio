@@ -71,10 +71,21 @@ async function loadProjects() {
     const projects = await res.json();
     grid.innerHTML = '';
     projects.forEach(project => {
+      const images = Array.isArray(project.image_gallery) && project.image_gallery.length
+        ? project.image_gallery
+        : [project.thumbnail_image].filter(Boolean);
+      const primaryImage = images[0] || '';
+      const thumbs = images
+        .map((img, index) => `<button type="button" class="project-thumb ${index === 0 ? 'is-active' : ''}" data-image="${img}" aria-label="View project image ${index + 1}"><img src="${img}" alt="${project.title} image ${index + 1}" /></button>`)
+        .join('');
+
       const card = document.createElement('div');
       card.className = 'project-card';
       card.innerHTML = `
-        <img src="${project.thumbnail_image}" alt="${project.title}" />
+        <div class="project-gallery">
+          <img src="${primaryImage}" alt="${project.title}" class="project-main-image" />
+          ${images.length > 1 ? `<div class="project-thumbs">${thumbs}</div>` : ''}
+        </div>
         <h3>${project.title}</h3>
         <p>${project.description}</p>
         <div class="tech-tags">${project.tech_stack.map(tag => `#${tag}`).join(' ')}</div>
@@ -84,6 +95,17 @@ async function loadProjects() {
         </div>
       `;
       grid.appendChild(card);
+
+      const mainImage = card.querySelector('.project-main-image');
+      card.querySelectorAll('.project-thumb').forEach((thumb) => {
+        thumb.addEventListener('click', () => {
+          card.querySelectorAll('.project-thumb').forEach((btn) => btn.classList.remove('is-active'));
+          thumb.classList.add('is-active');
+          if (mainImage) {
+            mainImage.src = thumb.getAttribute('data-image');
+          }
+        });
+      });
     });
   } catch (e) {
     grid.innerHTML = '<p>Unable to load projects.</p>';
@@ -160,6 +182,78 @@ if (contactForm) {
             } catch (err) {
               alert('Failed to send message.');
             }
+  });
+}
+
+// --- Credential Document Requests ---
+function setupCredentialRequests() {
+  const modal = document.getElementById('credential-modal');
+  const modalClose = document.getElementById('credential-modal-close');
+  const requestForm = document.getElementById('credential-request-form');
+  const docTypeInput = document.getElementById('credential-document-type');
+  const statusEl = document.getElementById('credential-request-message');
+  const requestButtons = document.querySelectorAll('.credential-request-btn');
+
+  if (!modal || !requestForm || !docTypeInput || !requestButtons.length) return;
+
+  const setMessage = (message, isError = false) => {
+    if (!statusEl) return;
+    statusEl.textContent = message;
+    statusEl.classList.toggle('error', isError);
+  };
+
+  const openModal = (documentType) => {
+    docTypeInput.value = documentType;
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+  };
+
+  const closeModal = () => {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    requestForm.reset();
+  };
+
+  requestButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const docType = btn.getAttribute('data-document');
+      if (docType) openModal(docType);
+    });
+  });
+
+  if (modalClose) {
+    modalClose.addEventListener('click', closeModal);
+  }
+
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) closeModal();
+  });
+
+  requestForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const payload = {
+      full_name: (document.getElementById('credential-full-name')?.value || '').trim(),
+      email: (document.getElementById('credential-email')?.value || '').trim(),
+      document_type: docTypeInput.value,
+      consent_given: !!document.getElementById('credential-consent')?.checked,
+    };
+
+    try {
+      const response = await fetch(`${API_BASE}/api/credentials/request`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        setMessage(result.error || 'Unable to process your request right now.', true);
+        return;
+      }
+      setMessage(result.message || 'Document sent to your email successfully.');
+      closeModal();
+    } catch (err) {
+      setMessage('Failed to send request. Please try again.', true);
+    }
   });
 }
 
@@ -270,4 +364,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
+
+  setupCredentialRequests();
 });
