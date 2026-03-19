@@ -122,7 +122,10 @@ ROOT_URLCONF = 'cloudlab.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+            str(BASE_DIR.parent),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

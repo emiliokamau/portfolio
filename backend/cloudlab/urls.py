@@ -21,11 +21,23 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
-from django.views.generic.base import RedirectView
+from django.views.static import serve
+
+PROJECT_ROOT = settings.BASE_DIR.parent
 
 urlpatterns = [
-    path('', RedirectView.as_view(url=settings.FRONTEND_LANDING_URL, permanent=False), name='homepage-redirect'),
+    path('', TemplateView.as_view(template_name='landing.html'), name='landing'),
+    path('landing.html', TemplateView.as_view(template_name='landing.html'), name='landing-html'),
+    path('index.html', TemplateView.as_view(template_name='index.html'), name='index-html'),
+    path('skills.html', TemplateView.as_view(template_name='skills.html'), name='skills-html'),
+    path('projects.html', TemplateView.as_view(template_name='projects.html'), name='projects-html'),
+    path('experiments.html', TemplateView.as_view(template_name='experiments.html'), name='experiments-html'),
+    path('contact.html', TemplateView.as_view(template_name='contact.html'), name='contact-html'),
     path('api-status/', TemplateView.as_view(template_name='homepage.html'), name='api-status'),
+    path('assets/<path:path>', serve, {'document_root': str(PROJECT_ROOT / 'assets')}),
+    path('styles/<path:path>', serve, {'document_root': str(PROJECT_ROOT / 'styles')}),
+    path('scripts/<path:path>', serve, {'document_root': str(PROJECT_ROOT / 'scripts')}),
+    path('config/<path:path>', serve, {'document_root': str(PROJECT_ROOT / 'config')}),
     # Use a custom admin URL path to help prevent automated bot scanning and brute-force attacks
     path('airlock/', admin.site.urls),
     path('api/', include('portfolioapi.urls')),
