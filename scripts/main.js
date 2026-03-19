@@ -62,6 +62,26 @@ const API_BASE = (
     : 'https://portfolio-emiliokamau.up.railway.app'
 ).replace(/\/+$/, '');
 
+// --- Fetch and Apply Admin-Managed Profile Photo ---
+async function loadProfilePhoto() {
+  const profileImages = document.querySelectorAll('.profile-photo');
+  if (!profileImages.length) return;
+
+  try {
+    const response = await fetch(`${API_BASE}/api/profile`);
+    if (!response.ok) return;
+    const profile = await response.json();
+    if (!profile || !profile.profile_photo) return;
+
+    profileImages.forEach((img) => {
+      img.src = profile.profile_photo;
+    });
+  } catch (err) {
+    // Keep existing static image as fallback.
+  }
+}
+loadProfilePhoto();
+
 // --- Fetch and Render Projects ---
 async function loadProjects() {
   const grid = document.getElementById('projects-grid');

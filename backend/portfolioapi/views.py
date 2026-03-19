@@ -2,8 +2,8 @@
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Project, Quest, Resume, Skill
-from .serializers import ProjectSerializer, QuestSerializer, ResumeSerializer, SkillSerializer
+from .models import Project, Quest, Resume, Skill, PortfolioProfile
+from .serializers import ProjectSerializer, QuestSerializer, ResumeSerializer, SkillSerializer, PortfolioProfileSerializer
 from .messaging import MessageService
 from rest_framework import permissions
 from rest_framework.permissions import SAFE_METHODS
@@ -30,6 +30,18 @@ class SkillListCreateView(generics.ListCreateAPIView):
 	queryset = Skill.objects.all().order_by('-created_at')
 	serializer_class = SkillSerializer
 	permission_classes = [permissions.AllowAny]
+
+
+class PortfolioProfileView(APIView):
+	permission_classes = [permissions.AllowAny]
+
+	def get(self, request):
+		profile = PortfolioProfile.load()
+		serializer = PortfolioProfileSerializer(profile)
+		data = serializer.data
+		if data.get('profile_photo'):
+			data['profile_photo'] = request.build_absolute_uri(data['profile_photo'])
+		return Response(data, status=status.HTTP_200_OK)
 
 
 class ProjectListView(generics.ListCreateAPIView):

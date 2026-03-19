@@ -10,7 +10,22 @@ class Skill(models.Model):
 		return self.name
 
 
-from django.db import models
+class PortfolioProfile(models.Model):
+	profile_photo = models.ImageField(upload_to='profile/', blank=True, null=True)
+	updated_at = models.DateTimeField(auto_now=True)
+
+	def save(self, *args, **kwargs):
+		# Keep this model as a single editable profile record in admin.
+		self.pk = 1
+		super().save(*args, **kwargs)
+
+	@classmethod
+	def load(cls):
+		obj, _ = cls.objects.get_or_create(pk=1)
+		return obj
+
+	def __str__(self):
+		return 'Portfolio Profile'
 
 class Project(models.Model):
 	title = models.CharField(max_length=200)

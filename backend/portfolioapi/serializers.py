@@ -1,12 +1,18 @@
 # Serializers for Project, Quest, Resume, Skill, and Contact
 from rest_framework import serializers
-from .models import Project, Quest, Resume, Skill, CredentialDownloadRequest
+from .models import Project, Quest, Resume, Skill, CredentialDownloadRequest, PortfolioProfile
 
 
 class SkillSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Skill
 		fields = '__all__'
+
+
+class PortfolioProfileSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = PortfolioProfile
+		fields = ['profile_photo', 'updated_at']
 
 
 class ProjectSerializer(serializers.ModelSerializer):
