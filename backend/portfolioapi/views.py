@@ -6,6 +6,8 @@ from .models import Project, Quest, Resume, Skill
 from .serializers import ProjectSerializer, QuestSerializer, ResumeSerializer, SkillSerializer
 from .messaging import MessageService
 from rest_framework import permissions
+from rest_framework.permissions import SAFE_METHODS
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 from django.conf import settings
 import requests
@@ -14,15 +16,26 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+class AdminWriteReadOnly(permissions.BasePermission):
+	"""Allow public reads; restrict writes to authenticated staff users."""
+
+	def has_permission(self, request, view):
+		if request.method in SAFE_METHODS:
+			return True
+		return bool(request.user and request.user.is_authenticated and request.user.is_staff)
+
+
 class SkillListCreateView(generics.ListCreateAPIView):
 	queryset = Skill.objects.all().order_by('-created_at')
 	serializer_class = SkillSerializer
 	permission_classes = [permissions.AllowAny]
 
 
-class ProjectListView(generics.ListAPIView):
+class ProjectListView(generics.ListCreateAPIView):
 	queryset = Project.objects.all().order_by('-date_created')
 	serializer_class = ProjectSerializer
+	permission_classes = [AdminWriteReadOnly]
+	parser_classes = [MultiPartParser, FormParser, JSONParser]
 
 
 class QuestListView(generics.ListAPIView):
