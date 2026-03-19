@@ -4,7 +4,7 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r backend/requirements.txt && cd backend && python manage.py migrate && python manage.py collectstatic --noinput
-    startCommand: cd backend && gunicorn cloudlab.wsgi:application
+    startCommand: cd backend && gunicorn cloudlab.wsgi:application --bind 0.0.0.0:$PORT --workers ${WEB_CONCURRENCY:-1} --timeout 120
     workingDirectory: .
     envVars:
       - key: DEBUG
