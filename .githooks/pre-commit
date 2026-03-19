@@ -1,0 +1,39 @@
+#!/usr/bin/env sh
+
+# Block commits that contain likely secrets in staged changes.
+# Scans only added lines to reduce noise.
+
+set -eu
+
+staged_diff=$(git diff --cached --unified=0 --no-color)
+
+if [ -z "$staged_diff" ]; then
+  exit 0
+fi
+
+# Added lines only (exclude diff metadata lines).
+added_lines=$(printf '%s\n' "$staged_diff" | grep '^+' | grep -v '^+++ ' || true)
+
+if [ -z "$added_lines" ]; then
+  exit 0
+fi
+
+# Common high-risk secret patterns.
+secret_pattern='(SENDGRID_API_KEY\s*=\s*SG\.[A-Za-z0-9._-]+|TWILIO_AUTH_TOKEN\s*=\s*[A-Za-z0-9]{16,}|TWILIO_ACCOUNT_SID\s*=\s*AC[A-Za-z0-9]{16,}|SLACK_WEBHOOK_URL\s*=\s*https://hooks\.slack\.com/services/|RECAPTCHA_SECRET_KEY\s*=\s*[A-Za-z0-9_-]{20,}|EMAIL_HOST_PASSWORD\s*=\s*[^[:space:]]+|SECRET_KEY\s*=\s*[^[:space:]]+|-----BEGIN (RSA|EC|OPENSSH|DSA)? ?PRIVATE KEY-----|AKIA[0-9A-Z]{16})'
+
+matches=$(printf '%s\n' "$added_lines" | grep -E "$secret_pattern" || true)
+
+if [ -n "$matches" ]; then
+  echo ""
+  echo "ERROR: Potential secrets detected in staged changes. Commit blocked."
+  echo ""
+  printf '%s\n' "$matches"
+  echo ""
+  echo "Actions:"
+  echo "1) Remove the secret from tracked files"
+  echo "2) Move it to backend/.env or Render environment variables"
+  echo "3) Re-stage and commit again"
+  exit 1
+fi
+
+exit 0
