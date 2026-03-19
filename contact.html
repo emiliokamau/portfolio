@@ -43,7 +43,7 @@
     <div style="margin-top:2rem;">
       <div class="typewriter" id="typewriter" aria-label="Profile Description"></div>
     </div>
-  </section>
+  </main>
   <footer class="main-footer">
     <div class="footer-content">
       <p class="footer-text">&copy; 2025 The Cloud Lab. All rights reserved.</p>
@@ -54,55 +54,9 @@
       </div>
     </div>
   </footer>
-  
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-  <script>
-    // Sidebar toggle logic
-    const sidebar = document.getElementById('sidebar');
-    const sidebarToggle = document.getElementById('sidebar-toggle');
-    const mainContent = document.querySelector('.main-content');
-    const sidebarFab = document.querySelector('.sidebar-fab');
-    sidebarToggle.addEventListener('click', () => {
-      sidebar.classList.toggle('collapsed');
-      mainContent.classList.toggle('expanded');
-      document.body.classList.toggle('noscroll', sidebar.classList.contains('collapsed'));
-    });
-    if (sidebarFab) {
-      sidebarFab.addEventListener('click', () => {
-        sidebar.classList.add('collapsed');
-        document.body.classList.add('noscroll');
-      });
-    }
-    // Dark mode toggle logic
-    const darkToggle = document.getElementById('darkmode-toggle');
-    darkToggle.addEventListener('click', () => {
-      document.body.classList.toggle('dark');
-      darkToggle.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
-    });
-    // Typewriter Effect for Profile Description
-    const typewriterText = "I'm Emilio Kamau, a Full Stack Developer & Data Scientist passionate about building intelligent, beautiful, and user-friendly digital experiences. I love Python, Django, Flask, and AI/ML. I turn data into stories and code into magic!";
-    const typewriterElem = document.getElementById('typewriter');
-    let i = 0;
-    function typeWriter() {
-      if (typewriterElem && i < typewriterText.length) {
-        typewriterElem.textContent += typewriterText.charAt(i);
-        i++;
-        setTimeout(typeWriter, 30);
-      }
-    }
-    typeWriter();
-  </script>
+
   <script src="config/env.js"></script>
-  <script>
-    // Attach site key from env to reCAPTCHA widget
-    document.addEventListener('DOMContentLoaded', () => {
-      const widget = document.querySelector('.g-recaptcha');
-      if (widget && window.RECAPTCHA_SITE_KEY) {
-        widget.setAttribute('data-sitekey', window.RECAPTCHA_SITE_KEY);
-      }
-    });
-  </script>
+  <script src="https://www.google.com/recaptcha/api.js?render=explicit" async defer></script>
   <script src="scripts/main.js"></script>
 </body>
 </html>
-  </main>
