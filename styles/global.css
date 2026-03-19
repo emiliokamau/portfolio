@@ -198,12 +198,16 @@ body.dark .landing-desc {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.68rem;
-  font-weight: 700;
-  text-transform: lowercase;
+  font-size: 0.8rem;
+  line-height: 1;
   background: rgba(91, 228, 217, 0.18);
   border: 1px solid rgba(91, 228, 217, 0.38);
   color: #d9fffb;
+}
+
+.social-icon i {
+  font-size: 0.8rem;
+  line-height: 1;
 }
 
 .footer-subscribe-form {
