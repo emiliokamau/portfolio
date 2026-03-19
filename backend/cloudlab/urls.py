@@ -21,9 +21,11 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
+from django.views.generic.base import RedirectView
 
 urlpatterns = [
-    path('', TemplateView.as_view(template_name='homepage.html'), name='homepage'),
+    path('', RedirectView.as_view(url=settings.FRONTEND_LANDING_URL, permanent=False), name='homepage-redirect'),
+    path('api-status/', TemplateView.as_view(template_name='homepage.html'), name='api-status'),
     # Use a custom admin URL path to help prevent automated bot scanning and brute-force attacks
     path('airlock/', admin.site.urls),
     path('api/', include('portfolioapi.urls')),
